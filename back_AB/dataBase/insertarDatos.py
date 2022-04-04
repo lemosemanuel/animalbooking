@@ -1,6 +1,5 @@
 import psycopg2
-from dataBase.connection import connectDB
-
+from connection import connectDB
 def insertData(tabla,columns,values):
     try:
         con, cursor = connectDB()

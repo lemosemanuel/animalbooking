@@ -1,5 +1,5 @@
 import psycopg2
-from dataBase.connection import *
+from connection import *
 
 
 

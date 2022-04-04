@@ -14,15 +14,16 @@ user_auth=Blueprint("user_auth",__name__)
 def addProduct():
     respuesta=request.json
     
-    print(respuesta['email'])
-    data=buscar_id('avatar_credentials','id','email', "'"+respuesta['email']+"'")
-    if data:
+    print(respuesta)
+    checkEmail=buscar_id('avatar_credentials','id','email', "'"+respuesta['email']+"'")
+    checkPassword=buscar_id('avatar_credentials','id','password', "'"+respuesta['password']+"'")
+
+    if checkEmail and checkPassword:
         write_token(respuesta)
         return jsonify({
             "message":"Product Added Succesfully", 
-            "avatar_id":data,
-            'token':write_token(respuesta)
-            
+            "avatar_id":checkEmail,
+            'token':str(write_token(data=respuesta))     
             })
     else:
     # new_product= {

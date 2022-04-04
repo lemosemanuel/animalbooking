@@ -11,15 +11,17 @@ def expire_date(days: int):
     new_date = now + timedelta(days)
     return new_date
 
+a={'email':'lemos.ema@gmail.com'}
+
 
 def write_token(data: dict):
     token = encode(
         payload={**data, "exp": expire_date(2)},
-        key=secretkey,
+        key=secretkey(),
         algorithm="HS256")
     # return token.encode("UTF-8")
     return token
-
+# write_token(data=a)
 
 def validate_token(token, output=False):
     try:

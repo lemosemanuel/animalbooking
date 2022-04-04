@@ -1,5 +1,4 @@
 from flask import Blueprint, request, jsonify
-from requests import get
 
 from dataBase.pedir_relaciones import buscar_id
 
@@ -16,12 +15,12 @@ def verify_token():
 
 @user_register.route('/register',methods=['GET'])
 def addProduct():
-    respuesta=request.json
+    dataSended=request.json
     
-    print(respuesta['ema'])
-    respuesta=buscar_id('avatar_info','id','name',"'emanuel'")
-    if respuesta:
-        return jsonify({"message":"Product Added Succesfully", "products":respuesta})
+    # chequeo que el mail no exista
+    checkEmail=buscar_id('avatar_credentials','id','email', "'"+dataSended['email']+"'")
+    if checkEmail:
+        return jsonify({"message":"Product Added Succesfully", "products":"No se puede registrar un Mail que YA EXISTE"})
     else:
     # new_product= {
     #     "name": request.json['name'],

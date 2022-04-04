@@ -1,5 +1,5 @@
 import psycopg2
-from dataBase.connection import connectDB
+from connection import connectDB
 
 def pedir_relaciones(tabla,tabla2,valor):
     try:
