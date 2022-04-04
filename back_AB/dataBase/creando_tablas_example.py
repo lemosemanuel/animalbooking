@@ -1,21 +1,26 @@
 import psycopg2
 from dataBase.connection import *
 from dataBase.crearTablas import *
+from dataBase.insertarDatos import insertData
 
 
 
 crearTabla('avatar','''
                         avatar_info_id int not null,
                         avatar_credentials_id int not null,
+                        house_info_id int not null,
+
             ''')
 
 
 crearTabla('avatar_credentials','''
+                                avatar_id int not null,
                                 email varchar(20) not null CHECK (email NOT LIKE '% %'),
                                 password varchar(20) not null CHECK (password NOT LIKE '% %'),
                                 historical_emails varchar(20) not null CHECK (historical_emails NOT LIKE '% %'),
                                 hostorical_password varchar(20) not null CHECK (hostorical_password NOT LIKE '% %'),
-                                secure_code varchar(20) not null CHECK (secure_code NOT LIKE '% %')
+                                secure_code varchar(20) not null CHECK (secure_code NOT LIKE '% %'),
+                                foreign key (avatar_id) references avatar(id)
             ''')
 
 
@@ -128,13 +133,71 @@ crearTabla('walker_info_reviews','''
 
 
 # vamos con los animales
+crearTabla('pet_type','''
+                name varchar(20) not null
+            ''')
+
+
+
 crearTabla('pet','''
                     name varchar(40) not null,
-                    type_of_pet 
-                    reviews_id int not null,
-                    foreign key (walker_info_id) references walker_info(id),
-                    foreign key (reviews_id) references reviews(id)
+                    age int not null,
+                    type_of_pet int not null,
+                    foreign key (type_of_pet) references pet_type(id)
             ''')
+
+crearTabla('avatar_pet','''
+                    avatar_id int not null,
+                    pet_type_id int not null,
+                    foreign key (avatar_id) references avatar(id),
+                    foreign key (pet_type_id) references pet_type(id)
+            ''')
+
+# reservas
+# los dias que la casa pone desde el comienzo y condiciones
+crearTabla('type_of_room','''
+                    name varchar(20) not null,
+                    price varchar(20) not null
+        ''')
+
+crearTabla('house_aviable','''
+                    house_info_id int not null,
+                    start_day date not null,
+                    end_day date not null,
+                    num_of_pet int not null,
+                    pet_type_id int not null,
+                    active boolean not null,
+                    type_of_room_id int not null,
+                    foreign key (house_info_id) references house_info(id),
+                    foreign key (pet_type_id) references pet_type(id),
+                    foreign key (type_of_room_id) references type_of_room(id)
+            ''')
+
+crearTabla('reservations','''
+                    house_info_id int not null,
+                    avatar_id int not null,
+                    pet_id int not null,
+                    start_day date not null,
+                    end_day date not null,
+                    status varchar(20) not null,
+                    foreign key (house_info_id) references house_info(id),
+                    foreign key (avatar_id) references avatar(id),
+                    foreign key (pet_id) references pet(id)
+            ''')
+
+    
+
+
+#####################################      INGRESAR DATOSS        #######################################################
+
+insertData('avatar',' avatar_info_id, avatar_credentials_id, house_info_id','(1,1,1),(2,2,1),')
+
+
+
+# varios datos
+# insertData('avatar',"name,type_id", '12,1')
+
+# insertData('avatar',"name", "'emanuel'")
 
 
 # sql= crearTabla('avatar','name VARCHAR(20)')
