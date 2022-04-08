@@ -129,10 +129,10 @@ crearTabla('house_info_house_services','''
 
 # hacemos el paseador
 crearTabla('walker_info','''
-                    avatar_id int not null,
+                    avatar_info_id int not null,
                     price varchar(20) not null,
                     is_active boolean not null,
-                    foreign key (avatar_id) references avatar(id)
+                    foreign key (avatar_info_id) references avatar_info(id)
             ''')
 
 crearTabla('walker_info_reviews','''
@@ -186,22 +186,47 @@ crearTabla('house_aviable','''
 
 crearTabla('reservations','''
                     house_info_id int not null,
-                    avatar_id int not null,
+                    avatar_info_id int not null,
                     pet_id int not null,
                     start_day date not null,
                     end_day date not null,
                     status varchar(20) not null,
                     foreign key (house_info_id) references house_info(id),
-                    foreign key (avatar_id) references avatar(id),
+                    foreign key (avatar_info_id) references avatar_info(id),
                     foreign key (pet_id) references pet(id)
             ''')
 
     
 
 
+
+crearTabla('language','''
+                    name varchar(30) not null,
+            ''')
+
+crearTabla('page_name','''
+                    name varchar(30) not null,
+            ''')
+
+crearTabla('page_string','''
+                    name varchar(30) not null,
+            ''')
+
+crearTabla('languate_page_name_page_string','''
+                    language_id int not null,
+                    page_name_id int not null,
+                    page_string_id int not null,
+                    foreign key (language_id) references language(id),
+                    foreign key (page_name_id) references page_name(id),
+                    foreign key (page_string_id) references page_string(id),
+
+
+                    
+
+            ''')
 #####################################      INGRESAR DATOSS        #######################################################
 
-insertData('avatar',' avatar_info_id, avatar_credentials_id, house_info_id','(1,1,1),(2,2,1),')
+# insertData('avatar',' avatar_info_id, avatar_credentials_id, house_info_id','(1,1,1),(2,2,1),')
 
 
 

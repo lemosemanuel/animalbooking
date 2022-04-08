@@ -35,8 +35,6 @@ def insertDatataWhere(tabla,columns,values,where_column,where_value):
 
     return sql
 
-# insertDatataWhere('avatar_credentials','secure_code','23','avatar_info_id','2')
-
 # varios datos
 # isertData('avatar',"name,type_id", '12,1')
 
