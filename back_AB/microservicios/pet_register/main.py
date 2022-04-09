@@ -1,12 +1,10 @@
 from flask import Flask
-from routes.auth import user_auth
-from routes.register import user_register
+from routes.pet_register import pet_register
 
 # from dotenv import load_dotenv
 app = Flask(__name__)
 
-app.register_blueprint(user_auth, url_prefix="/api")
-app.register_blueprint(user_register, url_prefix="/api")
+app.register_blueprint(pet_register, url_prefix="/api")
 
 
 
