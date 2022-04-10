@@ -235,13 +235,13 @@ crearTabla('house_aviable','''
             ''')
 
 crearTabla('reservations','''
-                    house_info_id int not null,
+                    type_of_room_id int not null,
                     avatar_info_id int not null,
                     pet_id int not null,
                     start_day date not null,
                     end_day date not null,
                     status varchar(20) not null,
-                    foreign key (house_info_id) references house_info(id),
+                    foreign key (type_of_room_id) references type_of_room(id),
                     foreign key (avatar_info_id) references avatar_info(id),
                     foreign key (pet_id) references pet(id)
             ''')
