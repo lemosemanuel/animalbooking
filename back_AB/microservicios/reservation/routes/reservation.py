@@ -13,54 +13,71 @@ def createReservation(type_of_room_id,avatar_info_id,pet_id,start_day,end_day,st
     print(buscar_id('room_aviable','end_day','type_of_room_id',type_of_room_id))
     start_day_aviable=buscar_id('room_aviable','start_day','type_of_room_id',type_of_room_id)
     end_day_aviable=buscar_id('room_aviable','end_day','type_of_room_id',type_of_room_id)
-    start_day_aviable=datetime.datetime.strptime(start_day_aviable,'%Y-%m-%d').date()
-    end_day_aviable=datetime.datetime.strptime(end_day_aviable,'%Y-%m-%d').date()
-    print(start_day_aviable)
-    print(end_day_aviable)
+    start_day=datetime.datetime.strptime(start_day,'%Y-%m-%d').date()
+    end_day=datetime.datetime.strptime(end_day,'%Y-%m-%d').date()
+    print(type(start_day))
+
+
+
     # primero me fijo si esta dentro de lo habilitado por el lugar
     if start_day_aviable <= start_day and end_day_aviable >= start_day:
         if start_day_aviable <= end_day and end_day_aviable >= end_day:
             print('esta dentro de lo habilitado')
+            # checkeo si el tipo de animal es el que el hoster puse
+            id_pet_permite=buscar_id('room_aviable','pet_type_id','type_of_room_id',type_of_room_id)
+            id_pet_want=buscar_id('pet_type','id','name',"'"+pet_id+"'")
             
-            # hago la lista de todos los dias que se quiere quedar
-            listaDiasAReservar=[]
-            cantDias= end_day - start_day
-            for i in range(cantDias):
-                listaDiasAReservar.append(start_day+datetime.timedelta(days=i))
-
-            # ahora me fijo las reservas que tiene
-            # hago la lista de los dias reservados
-            listaDiasReservados=[]
-            for i in range(len(buscar_id('reservations','start_day','type_of_room_id',type_of_room_id))):
-                # dias que entra
-                tiempoDeLaEstadia=buscar_id('reservations','end_day','type_of_room_id',type_of_room_id)[i]-buscar_id('reservations','start_day','type_of_room_id',type_of_room_id)[i]
-                tiempoDeLaEstadia
+            if id_pet_permite == id_pet_want:
+                print('permitido')
+ 
+                # hago la lista de todos los dias que se quiere quedar
+                listaDiasAReservar=[]
+                cantDias=(end_day - start_day).days
+                for i in range(cantDias):
+                    listaDiasAReservar.append(start_day+datetime.timedelta(days=i))
                 
+                    print(listaDiasAReservar)
+                    print('dias a reservar')
+                    # ahora me fijo las reservas que tiene
+                    # hago la lista de los dias reservados
+                    listaDiasReservados=[]
+                    for i in range(len(buscar_id('reservations','start_day','type_of_room_id',type_of_room_id))):
+                        # dias que entra
+                        tiempoDeLaEstadia=buscar_id('reservations','end_day','type_of_room_id',type_of_room_id)[i]-buscar_id('reservations','start_day','type_of_room_id',type_of_room_id)[i]
+                        tiempoDeLaEstadia
+                        
 
-                for e in range(tiempoDeLaEstadia.days):
-                    dias=buscar_id('reservations','start_day','type_of_room_id',type_of_room_id)[i]+datetime.timedelta(days=e)
+                        for e in range(tiempoDeLaEstadia.days):
+                            dias=buscar_id('reservations','start_day','type_of_room_id',type_of_room_id)[i]+datetime.timedelta(days=e)                    
+                            listaDiasReservados.append(dias)
+                    print(listaDiasReservados)
                     
-                    listaDiasReservados.append(dias)
+                    if any(x in listaDiasAReservar for x in listaDiasReservados):
+                            print('no se puede')
+                    else:
+                        print ('se puede')
+                        print(type_of_room_id,avatar_info_id,id_pet_want,start_day,end_day,status)
+                        print("("+type_of_room_id+",'"+avatar_info_id+"',"+id_pet_want+",'"+str(start_day)+"','"+str(end_day)+"','"+status+"')")
 
-                    if listaDiasAReservar in listaDiasReservados:
-                        print('se puede')
+                        id_insert=insertData(
+                            'reservations',
+                            """
+                                type_of_room_id,avatar_info_id,pet_id,start_day,end_day,status
+                            """,
+                            "("+type_of_room_id+","+avatar_info_id+","+id_pet_want+",'"+str(start_day)+"','"+str(end_day)+"','"+status+"')"
+                            )
 
-createReservation('1','3','3',datetime.date(2022, 4, 23),datetime.date(2022, 4, 24),'se')
+            else:
+                print('no se puede esa especie de animal')
+        else:
+            print('fuera de lo habilitado por el hoster')
+    else:
+        print('fuera de lo habilitado por el hoster')
+# listaDiasAReservar=[datetime.date(2022, 4, 23), datetime.date(2022, 4, 24)]
+# listaDiasReservados=[datetime.date(2022, 4, 24), datetime.date(2022, 4, 26)]
 
+# createReservation('1','3','1',datetime.date(2022, 4, 27),datetime.date(2022, 4, 28),'se')
 
-    # ya tengo los dias reservados del lugar
-    # ahora los inserto en las reservas
-
-    id_insert=insertData(
-        'room_aviable',
-        """
-            type_of_room_id,avatar_info_id,pet_id,start_day,end_day,status
-        """,
-        "("+house_info_id+",'"+start_day+"','"+end_day+"',"+num_of_pet+","+pet_type_id+",'"+active+"',"+type_of_room_id+")"
-        )
-
-    
-    print(id_insert)
 
 
 
@@ -71,29 +88,26 @@ def verify_token():
     token=request.headers['Authorization'].split(' ')[1]
     return validate_token(token,output=False)
 
-@reservation.route('/aviable_room',methods=['GET'])
+@reservation.route('/reservation',methods=['GET'])
 def createNewReservation():
     dataSended=request.json
+    type_of_room_id=dataSended['type_of_room_id']
+    avatar_info_id=dataSended['avatar_info_id']
+    pet_id=dataSended['pet_id']
     start_day=dataSended['start_day']
     end_day=dataSended['end_day']
-    num_of_pet=dataSended['num_of_pet']
-    pet_type_id=dataSended['pet_type_id']
-    active=dataSended['active']
-    type_of_room_id=dataSended['type_of_room_id']
-    house_info_id=dataSended['house_info_id']
+    status=dataSended['status']
 
     try:
         createReservation(
-            house_info_id,
+            type_of_room_id,
+            avatar_info_id,
+            pet_id,
             start_day,
             end_day,
-            num_of_pet,
-            pet_type_id,
-            active,
-            type_of_room_id
-            
+            status            
             )
-        return jsonify({"message":"Avatar Added Succesfully", "products":"Se puso fechas habilitadas de inicio de la habitacion"})
+        return jsonify({"message":"Avatar Added Succesfully", "products":"Se Realizo la reserva con exito"})
     except:
         return jsonify({"message":"Avatar Added Succesfully", "products":"ERROR A CREARLO"})
 

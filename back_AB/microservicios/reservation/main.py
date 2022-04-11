@@ -1,15 +1,13 @@
 from flask import Flask
-from routes.house_register import house_register
-from routes.room_register import room_register
-from routes.aviable_room import aviable_room
+from routes.reservation import reservation
+from routes.free_reservations_days import checkFreeBeds
+
 
 # from dotenv import load_dotenv
 app = Flask(__name__)
+app.register_blueprint(checkFreeBeds, url_prefix="/api")
 
-app.register_blueprint(house_register, url_prefix="/api")
-app.register_blueprint(room_register, url_prefix="/api")
-app.register_blueprint(aviable_room, url_prefix="/api")
-
+app.register_blueprint(reservation, url_prefix="/api")
 
 
 

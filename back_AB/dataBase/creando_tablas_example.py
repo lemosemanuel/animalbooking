@@ -217,11 +217,9 @@ crearTabla('type_of_room','''
                     price varchar(20) not null,
                     pet_type_id int not null,
                     foreign key (pet_type_id) references pet_type(id)
-
-
         ''')
 
-crearTabla('house_aviable','''
+crearTabla('room_aviable','''
                     house_info_id int not null,
                     start_day date not null,
                     end_day date not null,
@@ -246,7 +244,12 @@ crearTabla('reservations','''
                     foreign key (pet_id) references pet(id)
             ''')
 
-    
+
+crearTabla('reservations_history','''
+                    type_of_room_id int not null,
+                    name varchar not null,
+                    foreign key (type_of_room_id) references type_of_room(id)                   
+            ''')
 
 
 
