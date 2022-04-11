@@ -110,8 +110,10 @@ crearTabla('house_info','''
             ''')
 
 crearTabla('reviews','''
-                    description varchar(50) not null,
-                    calification varchar(20) not null
+                    description varchar not null,
+                    calification varchar not null,
+                    avatar_info_id int not null,
+                    foreign key (avatar_info_id) references avatar_info(id)
             ''')
 
 crearTabla('house_info_reviews','''
@@ -138,6 +140,8 @@ crearTabla('walker_info','''
                     avatar_info_id int not null,
                     price varchar(20) not null,
                     is_active boolean not null,
+                    lat varchar not null,
+                    lon varchar not null,
                     foreign key (avatar_info_id) references avatar_info(id)
             ''')
 
@@ -273,6 +277,23 @@ crearTabla('language_page_name_page_string','''
                     foreign key (page_name_id) references page_name(id),
                     foreign key (page_string_id) references page_string(id)
             ''')
+
+
+###################################### IMAGENES ####################################
+#primero creo la puntera (Imagenes , esta engloba todo)
+crearTabla('images','''
+                    name varchar not null
+            ''')
+
+crearTabla('home_info_images','''
+                    home_info_id int not null,
+                    images_id in not null,
+                    foreign key (home_info_id) references home_info(id),
+                    foreign key (images_id) references images(id)
+
+            ''')
+
+
 #####################################      INGRESAR DATOSS        #######################################################
 
 # insertData('avatar',' avatar_info_id, avatar_credentials_id, house_info_id','(1,1,1),(2,2,1),')
