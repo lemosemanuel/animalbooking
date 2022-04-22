@@ -14,7 +14,7 @@ def insertarDataRegistro(name,name2,lastname,lastnmae2,identification_type,ident
     country=str(buscar_id('countries','id','name',"'"+countries_id+"'"))
     city=str(buscar_id('city','id','name',"'"+city_id+"'"))
     district=str(buscar_id('district','id','name',"'"+district_id+"'"))
-    cp=str(buscar_id('cp','id','name',"'"+cp_id+"'"))
+    # cp=str(buscar_id('cp','id','name',"'"+cp_id+"'"))
     
     insertData(
         'avatar_info',
@@ -36,14 +36,11 @@ def insertarDataRegistro(name,name2,lastname,lastnmae2,identification_type,ident
             street,
             num_street
         """,
-        "('"+name+"','"+name2+"','"+lastname+"','"+lastnmae2+"',"+typeDocum+",'"+identification+"','"+age+"','"+area_code+"','"+house_pone+"','"+mobile_phone+"',"+country+","+city+","+district+","+cp+",'"+street+"','"+num_street+"')")
+        "('"+name+"','"+name2+"','"+lastname+"','"+lastnmae2+"',"+typeDocum+",'"+identification+"','"+age+"','"+area_code+"','"+house_pone+"','"+mobile_phone+"',"+country+","+city+","+district+",'"+cp_id+"','"+street+"','"+num_street+"')")
 
 
 
 def insertarPassWordYCon(avatarid,email,password,histEmails,histPassword,secureCode):
-    # print(str(histEmails))
-    # print(str(histPassword))
-
     insertData('avatar_credentials','avatar_info_id, email, password, hist_email, hist_pass, secure_code',"("+avatarid+",'"+email+"','"+password+"','"+str(histEmails)+"','"+str(histPassword)+"','"+secureCode+"')")
 
 
@@ -60,7 +57,7 @@ def insertarPassWordYCon(avatarid,email,password,histEmails,histPassword,secureC
 #         return 'token invalido'
 
 
-@user_register.route('/register',methods=['GET'])
+@user_register.route('/register',methods=['POST'])
 def addProduct():
 
     dataSended=request.json
@@ -123,15 +120,15 @@ def addProduct():
                     )
             print(jsonData)
 
-            return jsonify({"message":"Avatar Added Succesfully", "products":str(jsonData)})
+            return jsonify({
+                "message":"User Register Succesfully",
+                "succefully":True,
+                'token':jsonData 
+                })
         except:
-            return jsonify({"message":"Avatar Added Succesfully", "products":'errror'})
+            return jsonify({
+                "message":"User can NOT Register Succesfully",
+                "succefully":False,
+                })
 
-#   pasos para el registro
-#   pregunto nombre , apellido, email
-#   pregunto id
-#   saco foto de id
-#   pregunto constra
-#   pregunto que quiere ser (hoser, dejar a su perro,paseador de perro, veterinario )
-#   envio email de confirmacion
-#   envio sms de confirmacion
+

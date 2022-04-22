@@ -13,3 +13,7 @@ export 'package:animal_booking/widgets/pet_image.dart';
 
 export 'package:animal_booking/widgets/scan_button.dart';
 
+export 'package:animal_booking/widgets/alert.dart';
+
+export 'package:animal_booking/widgets/alert.dart';
+

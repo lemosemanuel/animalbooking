@@ -17,6 +17,9 @@ class AppState extends StatelessWidget {
         ChangeNotifierProvider(create: (_)=>AuthService()),
         ChangeNotifierProvider(create: (_)=>IndexBottonNavigation()),
         ChangeNotifierProvider(create: (_)=>PetsService()),
+        ChangeNotifierProvider(create: (_)=>ListDropDown()),
+        ChangeNotifierProvider(create: (_)=>SendEmailPin()),
+
         ChangeNotifierProvider(create: (_)=>HosterService()),
       ],
       child: MyApp(),
@@ -33,7 +36,14 @@ class MyApp extends StatelessWidget {
       initialRoute: AppRoutes.initialRoute,
       routes: AppRoutes.allRoutes(),
       onGenerateRoute:(settings) => ErrorRoute.onGenerateRoute(settings),
-      theme: AppTheme.myAppTheme,
+      // theme: AppTheme.myAppTheme,
     );
   }
 }
+
+
+
+
+
+
+
