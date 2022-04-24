@@ -7,65 +7,39 @@ import 'url.dart' as urlDirecction;
 
 
 class AuthService extends ChangeNotifier{
-  final String _baseUrl='identitytoolkit.googleapis.com';
+  // final String _baseUrl='identitytoolkit.googleapis.com';
   final String _apiToken=' AIzaSyDt80l6AdGNl2iW2SpVoSdk7hwBqHwQYEg ';
   final storage= new FlutterSecureStorage();
 
-  Future<String?> createUser(String email,String password)async{
-    final Map<String, dynamic>authData={
-      'email':email,
-      'password':password,
-      'returnSecureToken':true
-    };
+  Future login(String name,String password)async{
+      var headers = {
+        'Content-Type': 'application/json'
+      };
+      var request = http.Request('GET', Uri.parse('${urlDirecction.url}api/auth'));
+      request.body = json.encode({
+        "email":name,
+        "password":password
+      });
+      request.headers.addAll(headers);
 
-    final url=Uri.https(_baseUrl, '/v1/accounts:signUp',{
-      'key':_apiToken
-    });
+      http.StreamedResponse response = await request.send();
+      // print (await response.stream.bytesToString());
+      String respuesta = await response.stream.bytesToString();
+      var respuestaJson=json.decode(respuesta);
+      // print("${respuestaJson}");
 
-    final resp = await http.post(url,body:json.encode(authData));
-    final Map<String, dynamic> decodeResp= json.decode(resp.body);
+      if (respuestaJson["succefully"]==true){
+        final storage = new FlutterSecureStorage();
+        storage.write(key: 'jwt', value: respuestaJson["token"] );
 
-    // if the user can be create the api return a token
-
-    if(decodeResp.containsKey('idToken')){
-      await storage.write(key: 'idToken', value: decodeResp['idToken']);
-      return null;
-    }else{
-      return decodeResp['error']['message'];
-    }
+        return true;
+      }else{
+        return false;
+      }
   }
 
 
-  Future<String?> login(String email,String password)async{
-    final Map<String, dynamic>authData={
-      'email':email,
-      'password':password,
-      'returnSecureToken':true
 
-    };
-
-    final url=Uri.https(_baseUrl, '/v1/accounts:signInWithPassword',{
-      'key':_apiToken
-    });
-
-    final resp = await http.post(url,body:json.encode(authData));
-    final Map<String, dynamic> decodeResp= json.decode(resp.body);
-
-    // print(decodeResp);
-    // return 'Error en el login';
-
-    // si se registra me devuelve un token... lo tengo que guardar en el storage
-    if (decodeResp.containsKey('idToken')){
-      // guardo el token en el storage
-      await storage.write(key: 'idToken', value: decodeResp['idToken']);
-      // return decodeResp['idToken'];
-      return null;
-
-    }else{
-      return decodeResp['error']['message'];
-    }
-
-  }
 
   Future logout()async{
     // delete token from storage
@@ -103,7 +77,7 @@ class AuthService extends ChangeNotifier{
     } 
 
 
-     Future register(String name,String name_2,String lastname,String lastname_2,String identification_type_id,String identification,String age,String area_code,String house_phone,String mobile_phone,String countries_id,String city_id,String district_id,String cp_id,String street,String num_street,String email,String password,)async{
+    Future register(String name,String name_2,String lastname,String lastname_2,String identification_type_id,String identification,String age,String area_code,String house_phone,String mobile_phone,String countries_id,String city_id,String district_id,String cp_id,String street,String num_street,String email,String password,)async{
       var headers = {
         'Content-Type': 'application/json'
       };
@@ -137,9 +111,13 @@ class AuthService extends ChangeNotifier{
       // print("${respuestaJson}");
 
       if (respuestaJson["succefully"]==true){
+          final storage = new FlutterSecureStorage();
+          storage.write(key: 'jwt', value: respuestaJson["token"]);
         return respuestaJson["token"];
       }else{
         return "";
       }
   }
+
+
 }

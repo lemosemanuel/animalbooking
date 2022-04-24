@@ -14,16 +14,23 @@ def auth():
     
     print(respuesta)
     # print("la respuesta es :" +respuesta['email'])
-    checkEmail=buscar_id('avatar_credentials','id','email', "'"+respuesta['email']+"'")
+    checkEmail=buscar_id('avatar_credentials','avatar_info_id','email', "'"+respuesta['email']+"'")
     checkPassword=buscar_id('avatar_credentials','id','password', "'"+respuesta['password']+"'")
+    nameAvatar=buscar_id('avatar_info','name','id', ""+str(checkEmail)+"")
 
     if checkEmail and checkPassword:
-        write_token(respuesta)
+        jsonData=write_token(
+                data={
+                    "name":nameAvatar,
+                    "id":respuesta['password'],
+                    "avatar_type":['normal','walker','hoster'],
+                    }
+                    )
         return jsonify({
             "message":"User Login Succesfully",
             "succefully":True,
             "avatar_id":checkEmail,
-            'token':str(write_token(data=respuesta))     
+            'token':str(jsonData)     
             })
     else:
         return jsonify({"succefully":False})

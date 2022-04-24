@@ -6,6 +6,7 @@ import 'package:animal_booking/widgets/widgets.dart';
 import 'dart:io';
 import 'package:animal_booking/services/services.dart';
 import 'package:collection/collection.dart';
+import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 
 
 final TextEditingController _secondName = TextEditingController();
@@ -129,8 +130,10 @@ class _BoxText extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return TextFormField(
+      obscureText: (hinText == 'Password')?true:false,
       style: TextStyle(color: Colors.black,fontSize: 20),
         // initialValue: '',
+
         controller: textController,                
         decoration: _TextBoxDecoration(hinText, labelText, leftIcon, rightIcon),        
         onChanged: (value) =>{
@@ -213,7 +216,7 @@ class RegisterMail extends StatelessWidget {
                     SizedBox(height: 15,),
                     _BoxText(hinText: "Password", labelText: 'Password', rightIcon: Icons.password, leftIcon: Icons.lock, textController: _password),
                     SizedBox(height: 15,),
-                    _BoxText(hinText: "Repeat Password", labelText: 'Repeat Password', rightIcon: Icons.password ,leftIcon: Icons.lock, textController: _repetPassword),
+                    _BoxText(hinText: "Password", labelText: 'Repeat Password', rightIcon: Icons.password ,leftIcon: Icons.lock, textController: _repetPassword),
 
                     SizedBox(height: 15,),
 
@@ -647,6 +650,8 @@ class RegisterPin extends StatelessWidget {
     final _registerProvider=Provider.of<AuthService>(context,listen: false);
 
     List _numberList=[];
+    String userToken;
+
 
         return Scaffold(
              backgroundColor: Colors.white,
@@ -681,38 +686,53 @@ class RegisterPin extends StatelessWidget {
             SizedBox(height: 20,),
 
             MaterialButton(
-              onPressed: (){
+              onPressed: ()async{
                 // List _nuevaLista=['3','4','5','5'];
                 _numberList.addAll([int.parse(_number1.text),int.parse(_number2.text),int.parse(_number3.text),int.parse(_number4.text),int.parse(_number5.text)]);
                 if( ListEquality().equals(_numberList, _emailPin)){
                   print('son iguales');
                   Navigator.pushNamed(context, "home");
-                  _registerProvider.register(
-                      _firstName.text,
-                      _secondName.text,
-                      _firstLastname.text,
-                      _secondLastname.text,
-                      _typeId.text,
-                      _idAvatar.text,
-                      _birthAvatar.text,
-                      "+54",
-                      _phoneNumber.text,
-                      _mobileNumber.text,
-                      country,
-                      // String countries_id,
-                      city,
-                      // String city_id,
-                      _district,
-                      // String district_id,
-                      _cp.text,
-                      // String cp_id,
-                      _street.text,
-                      // String street,
-                      "1841",
-                      // String num_street,
-                      _email.text,
-                      _password.text
-                  );
+
+                  final storage = new FlutterSecureStorage();
+
+                  FutureBuilder(
+                    future: _registerProvider.register(
+                                _firstName.text,
+                                _secondName.text,
+                                _firstLastname.text,
+                                _secondLastname.text,
+                                _typeId.text,
+                                _idAvatar.text,
+                                _birthAvatar.text,
+                                "+54",
+                                _phoneNumber.text,
+                                _mobileNumber.text,
+                                country,
+                                // String countries_id,
+                                city,
+                                // String city_id,
+                                _district,
+                                // String district_id,
+                                _cp.text,
+                                // String cp_id,
+                                _street.text,
+                                // String street,
+                                "1841",
+                                // String num_street,
+                                _email.text,
+                                _password.text
+                            ),
+                    builder: (context, snapshot) {
+                      var userToken=snapshot.data! as String;
+                      print("el token es el siguiente :---- ${userToken}");
+                      storage.write(key: 'jwt', value: userToken );
+                      return Container();
+
+                    });
+
+                  // print(storage.read(key: 'jwt'));
+
+
                   Navigator.pushNamed(context, 'register_two_pet_successful');
                 }else{
                   _numberList=[];
@@ -742,6 +762,31 @@ class RegisterPin extends StatelessWidget {
                 child: Text("Listo !",style: TextStyle(fontSize: 20),),
               ),
                     )
+
+
+
+            // MaterialButton(
+            //   onPressed: ()async{
+            //     var token=await _registerProvider.register('name', 'name_2', 'lastname', 'lastname_2', 'identification_type_id', 'identification', 'age', 'area_code', 'house_phone', 'mobile_phone', 'countries_id', 'city_id', 'district_id', 'cp_id', 'street', 'num_street', 'email', 'password');
+            //     // print(await token);
+            //     final storage = new FlutterSecureStorage();
+            //     storage.write(key: 'jwt', value: token );
+
+            //     var token2=await storage.read(key: "jwt");
+            //     print(token2);
+            //     Navigator.pushNamed(context, "home");
+            //   },
+            //   shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
+            //   disabledColor: Colors.amber,
+            //   elevation: 0,
+            //   color: Colors.amber,
+            //   child: Container(
+            //     padding: const EdgeInsets.symmetric(horizontal: 40,vertical: 15),
+            //     child: Text("Listo !",style: TextStyle(fontSize: 20),),
+            //   ),
+            //   )
+           
+           
            ]
         )
       )

@@ -1,7 +1,10 @@
+import 'dart:io';
+
 import 'package:animal_booking/providers/login_form_provider.dart';
 import 'package:animal_booking/services/services.dart';
 import 'package:animal_booking/ux_ui/text_style.dart';
 import 'package:animal_booking/widgets/widgets.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:animal_booking/ux_ui/input_decorations/input_decorations.dart';
 import 'package:flutter/widgets.dart';
@@ -95,16 +98,27 @@ class _LoginForm extends StatelessWidget {
             final authService= Provider.of<AuthService>(context,listen: false);
 
             if (!loginForm.isValidForm())return;
-            loginForm.isLoading=true;
+            // loginForm.isLoading=true;
 
-            final String? resp= await authService.login(loginForm.email, loginForm.password);
-            if(resp == null){
+            final resp= await authService.login(loginForm.email, loginForm.password);
+            print(resp);
+            if(resp){
               Navigator.pushReplacementNamed(context, 'home');
             }else{
-              print(resp);
-              NotificationsService.showSnackbar(resp);
-              loginForm.isLoading=false;
-            }
+              if (Platform.isAndroid){
+                showDialog(
+                  context: context, 
+                  builder: (context){
+                    return AndroidDialog(title: 'Usuario Invalido !',description: "Mmmm....Te dare 3 chances mas",);
+                  }
+                );
+              }else{
+                showCupertinoDialog(
+                      context: context, 
+                      builder: (context)=>IosDialog(title: 'Usuario Invalido !',description: "Mmmm....Te dare 3 chances mas",)
+                );
+                }
+              }
             },
             shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
             disabledColor: Colors.grey,

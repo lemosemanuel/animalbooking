@@ -10,13 +10,17 @@ user_register=Blueprint("user_register",__name__)
 
 
 def insertarDataRegistro(name,name2,lastname,lastnmae2,identification_type,identification,age,area_code,house_pone,mobile_phone,countries_id,city_id,district_id,cp_id,street,num_street):
+    print("type of doc")
     typeDocum=str(buscar_id('identification_type','id','name',"'"+identification_type+"'"))
+    print("country")
     country=str(buscar_id('countries','id','name',"'"+countries_id+"'"))
+    print("city")
     city=str(buscar_id('city','id','name',"'"+city_id+"'"))
+    print("district")
     district=str(buscar_id('district','id','name',"'"+district_id+"'"))
     # cp=str(buscar_id('cp','id','name',"'"+cp_id+"'"))
     
-    insertData(
+    idUser=insertData(
         'avatar_info',
         """
             name,
@@ -37,6 +41,7 @@ def insertarDataRegistro(name,name2,lastname,lastnmae2,identification_type,ident
             num_street
         """,
         "('"+name+"','"+name2+"','"+lastname+"','"+lastnmae2+"',"+typeDocum+",'"+identification+"','"+age+"','"+area_code+"','"+house_pone+"','"+mobile_phone+"',"+country+","+city+","+district+",'"+cp_id+"','"+street+"','"+num_street+"')")
+    return idUser
 
 
 
@@ -84,12 +89,13 @@ def addProduct():
     print(email)
 
     # chequeo que el mail no exista
+
     checkEmail=buscar_id('avatar_credentials','id','email', "'"+email+"'")
     if checkEmail:
         return jsonify({"message":"Product Added Succesfully", "products":"No se puede registrar un Mail que YA EXISTE"})
     else:
         try:
-            insertarDataRegistro(
+            idUser=insertarDataRegistro(
                                 name,
                                 name_2,
                                 lastname,
@@ -107,23 +113,28 @@ def addProduct():
                                 street,
                                 num_street
                                 )
-            avatar_id=buscar_id('avatar_info','id','identification',"'"+identification+"'")
+            avatar_id=idUser
             print(avatar_id)
             # introdusco en credential tambien
-            insertarPassWordYCon("'"+str(avatar_id)+"'",str(email),str(password),'[''lemos@gmail.com'',''juana@gmail.com'']','[''lemos@gmail.com'',''juana@gmail.com'']','12321')
+            insertarPassWordYCon("'"+str(idUser)+"'",str(email),str(password),'[''lemos@gmail.com'',''juana@gmail.com'']','[''lemos@gmail.com'',''juana@gmail.com'']','12321')
 
             jsonData=write_token(
                 data={
                     "name":name,
                     "id":avatar_id,
+                    "avatar_type":['normal','walker','hoster'],
                     }
                     )
+
             print(jsonData)
+            
+
+
 
             return jsonify({
                 "message":"User Register Succesfully",
                 "succefully":True,
-                'token':jsonData 
+                'token':str(jsonData) 
                 })
         except:
             return jsonify({

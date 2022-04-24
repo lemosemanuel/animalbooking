@@ -16,7 +16,7 @@ class AppRoutes{
       RoutesModel(route: 'register phone', icon: Icons.app_registration, name: 'register phone', screen: RegisterPhone()),
       RoutesModel(route: 'register country', icon: Icons.app_registration, name: 'register country', screen: RegisterCountry()),
       RoutesModel(route: 'register secretcode', icon: Icons.app_registration, name: 'register secretcode', screen: RegisterPin()),
-      RoutesModel(route: 'register_two_pet_successful', icon: Icons.app_registration, name: 'register_two_pet_successful', screen: SuccessfulRegister()),
+      RoutesModel(route: 'register_successful', icon: Icons.app_registration, name: 'register_successful', screen: SuccessfulRegister()),
 
 
 

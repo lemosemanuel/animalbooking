@@ -89,6 +89,7 @@ def addProduct():
     print(email)
 
     # chequeo que el mail no exista
+
     checkEmail=buscar_id('avatar_credentials','id','email', "'"+email+"'")
     if checkEmail:
         return jsonify({"message":"Product Added Succesfully", "products":"No se puede registrar un Mail que YA EXISTE"})
@@ -121,9 +122,14 @@ def addProduct():
                 data={
                     "name":name,
                     "id":avatar_id,
+                    "avatar_type":['normal','walker','hoster'],
                     }
                     )
+
             print(jsonData)
+            
+
+
 
             return jsonify({
                 "message":"User Register Succesfully",

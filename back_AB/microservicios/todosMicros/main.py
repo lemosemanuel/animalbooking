@@ -26,4 +26,4 @@ app.register_blueprint(countries_list_drop_down,url_prefix="/api")
 
 if __name__ == '__main__':
     # load_dotenv()
-    app.run(debug=True,port=8000,host="192.168.0.166")
+    app.run(debug=True,port=8000,host="192.168.1.243")
