@@ -733,7 +733,7 @@ class RegisterPin extends StatelessWidget {
                   // print(storage.read(key: 'jwt'));
 
 
-                  Navigator.pushNamed(context, 'register_two_pet_successful');
+                  Navigator.pushNamed(context, 'register_successful');
                 }else{
                   _numberList=[];
                   if (Platform.isAndroid){
@@ -761,31 +761,7 @@ class RegisterPin extends StatelessWidget {
                 padding: const EdgeInsets.symmetric(horizontal: 40,vertical: 15),
                 child: Text("Listo !",style: TextStyle(fontSize: 20),),
               ),
-                    )
-
-
-
-            // MaterialButton(
-            //   onPressed: ()async{
-            //     var token=await _registerProvider.register('name', 'name_2', 'lastname', 'lastname_2', 'identification_type_id', 'identification', 'age', 'area_code', 'house_phone', 'mobile_phone', 'countries_id', 'city_id', 'district_id', 'cp_id', 'street', 'num_street', 'email', 'password');
-            //     // print(await token);
-            //     final storage = new FlutterSecureStorage();
-            //     storage.write(key: 'jwt', value: token );
-
-            //     var token2=await storage.read(key: "jwt");
-            //     print(token2);
-            //     Navigator.pushNamed(context, "home");
-            //   },
-            //   shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
-            //   disabledColor: Colors.amber,
-            //   elevation: 0,
-            //   color: Colors.amber,
-            //   child: Container(
-            //     padding: const EdgeInsets.symmetric(horizontal: 40,vertical: 15),
-            //     child: Text("Listo !",style: TextStyle(fontSize: 20),),
-            //   ),
-            //   )
-           
+            )      
            
            ]
         )
