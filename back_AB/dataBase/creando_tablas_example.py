@@ -223,27 +223,39 @@ crearTabla('type_of_room','''
                     foreign key (pet_type_id) references pet_type(id)
         ''')
 
-crearTabla('room_aviable','''
+crearTabla('beed_aviable_condition','''
                     house_info_id int not null,
                     start_day date not null,
                     end_day date not null,
-                    num_of_pet int not null,
                     pet_type_id int not null,
                     active boolean not null,
-                    type_of_room_id int not null,
+                    name varchar not null,
+                    price varchar not null,
                     foreign key (house_info_id) references house_info(id),
-                    foreign key (pet_type_id) references pet_type(id),
-                    foreign key (type_of_room_id) references type_of_room(id)
+                    foreign key (pet_type_id) references pet_type(id)
             ''')
 
+# crearTabla('room_aviable','''
+#                     house_info_id int not null,
+#                     start_day date not null,
+#                     end_day date not null,
+#                     num_of_pet int not null,
+#                     pet_type_id int not null,
+#                     active boolean not null,
+#                     type_of_room_id int not null,
+#                     foreign key (house_info_id) references house_info(id),
+#                     foreign key (pet_type_id) references pet_type(id),
+#                     foreign key (type_of_room_id) references type_of_room(id)
+#             ''')
+
 crearTabla('reservations','''
-                    type_of_room_id int not null,
+                    beed_aviable_condition_id int not null,
                     avatar_info_id int not null,
                     pet_id int not null,
                     start_day date not null,
                     end_day date not null,
                     status varchar(20) not null,
-                    foreign key (type_of_room_id) references type_of_room(id),
+                    foreign key (beed_aviable_condition_id) references beed_aviable_condition(id),
                     foreign key (avatar_info_id) references avatar_info(id),
                     foreign key (pet_id) references pet(id)
             ''')
@@ -286,11 +298,10 @@ crearTabla('images','''
             ''')
 
 crearTabla('home_info_images','''
-                    home_info_id int not null,
-                    images_id in not null,
-                    foreign key (home_info_id) references home_info(id),
+                    house_info_id int not null,
+                    images_id int not null,
+                    foreign key (house_info_id) references house_info(id),
                     foreign key (images_id) references images(id)
-
             ''')
 
 

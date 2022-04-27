@@ -4,7 +4,7 @@ import 'package:animal_booking/models/modes.dart';
 
 
 class AppRoutes{
-  static const initialRoute = 'login';
+  static const initialRoute = 'home';
   static final menuOption=<RoutesModel>[
       RoutesModel(route: 'home',icon: Icons.home,name: 'Details page',screen: const HomeScreen()),
 
@@ -17,6 +17,12 @@ class AppRoutes{
       RoutesModel(route: 'register country', icon: Icons.app_registration, name: 'register country', screen: RegisterCountry()),
       RoutesModel(route: 'register secretcode', icon: Icons.app_registration, name: 'register secretcode', screen: RegisterPin()),
       RoutesModel(route: 'register_successful', icon: Icons.app_registration, name: 'register_successful', screen: SuccessfulRegister()),
+
+
+
+      // host Routes
+      RoutesModel(route: 'HostChoice', icon: Icons.app_registration, name: 'HostChoice', screen: HostChoice()),
+
 
 
 

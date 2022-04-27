@@ -21,7 +21,7 @@ class HomeScreen extends StatelessWidget {
             body: Stack(
               children: [
                 BackgroundHome(),
-                _HomeBody(name: snapshot.data['name'])
+                _HomeBody(name: snapshot.data['name'], avatarType: snapshot.data['avatar_type'],)
               ],
             ),
             bottomNavigationBar: const CustomBottomNavigation(),
@@ -36,8 +36,9 @@ class HomeScreen extends StatelessWidget {
 }
 
 class _HomeBody extends StatelessWidget {
+  dynamic avatarType;
   dynamic name;
-  _HomeBody({Key? key,required this.name}) : super(key: key);
+  _HomeBody({Key? key,required this.name,required this.avatarType}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -51,7 +52,7 @@ class _HomeBody extends StatelessWidget {
           SizedBox(height: 40,),
 
           // Cards
-          CardsTablesHome()
+          CardsTablesHome(avatarType:avatarType! ,)
         ],
       ),
     );

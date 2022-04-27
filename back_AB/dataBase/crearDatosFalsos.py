@@ -1,4 +1,3 @@
-from sympy import true
 from connection import connectDB
 from insertarDatos import insertData
 from pedir_relaciones import buscar_id

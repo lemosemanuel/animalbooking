@@ -4,6 +4,8 @@ import 'package:provider/provider.dart';
 import 'dart:math' as math;
 
 
+final TextEditingController _search=TextEditingController();
+
 class HosterScreen extends StatelessWidget {
    
   const HosterScreen({Key? key}) : super(key: key);
@@ -31,14 +33,16 @@ class HosterScreen extends StatelessWidget {
                     backgroundColor: Colors.white,
                     leading: Icon(Icons.location_on_outlined, color: Colors.amber,),
                     primary: false,
-                    title: const TextField(
+                    title: TextField(
+                        controller: _search,
                         decoration: InputDecoration(
                             hintText: "Search",
                             border: InputBorder.none,
-                            hintStyle: TextStyle(color: Colors.grey))),
+                            hintStyle: TextStyle(color: Colors.grey))
+                            ),
                     actions: <Widget>[
                       IconButton(
-                        icon: Icon(Icons.search, color: Colors.amber), onPressed: () {},),
+                        icon: Icon(Icons.search, color: Colors.amber), onPressed: () {print(_search);},),
                       IconButton(icon: Icon(Icons.map_outlined, color: Colors.amber),
                         onPressed: () {},)
                     ],

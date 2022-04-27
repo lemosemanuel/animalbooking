@@ -40,6 +40,7 @@ def buscar_id(tabla,columnaAdevolver,column,valor):
         else:
             return lista
     except:
+        print(sql)
         print('No se encontro el dato')
 
 
