@@ -4,7 +4,7 @@ import 'package:animal_booking/models/modes.dart';
 
 
 class AppRoutes{
-  static const initialRoute = 'home';
+  static const initialRoute = 'hosters';
   static final menuOption=<RoutesModel>[
       RoutesModel(route: 'home',icon: Icons.home,name: 'Details page',screen: const HomeScreen()),
 
@@ -23,6 +23,7 @@ class AppRoutes{
       // host Routes
       RoutesModel(route: 'HostChoice', icon: Icons.app_registration, name: 'HostChoice', screen: HostChoice()),
 
+      RoutesModel(route: 'hosters', icon: Icons.house, name: 'Hosters Screen', screen: const HosterScreen()),
 
 
 
@@ -37,7 +38,6 @@ class AppRoutes{
       RoutesModel(route: 'reservation_pet', icon: Icons.app_registration, name: 'Reservation Screen', screen: ReservationPetScreen()),
       RoutesModel(route: 'reservation_pet_details', icon: Icons.app_registration, name: 'Reservation Details Screen', screen: ReservationDetailsScreen()),
       RoutesModel(route: 'profile', icon: Icons.pets, name: 'Profile Screen', screen: const ProfileScreen()),
-      RoutesModel(route: 'hosters', icon: Icons.house, name: 'Hosters Screen', screen: const HosterScreen()),
       RoutesModel(route: 'hosterinfo', icon: Icons.house, name: 'Hoster Info Screen', screen: const HosterInfoScreen()),
       RoutesModel(route: 'payment', icon: Icons.card_giftcard, name: 'Payment Screen', screen: PaymentScreen()),
 

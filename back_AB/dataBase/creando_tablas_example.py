@@ -123,15 +123,15 @@ crearTabla('house_info_reviews','''
                     foreign key (reviews_id) references reviews(id)
             ''')
 
-crearTabla('room_services','''
-                    name varchar(20) not null
+crearTabla('beed_services','''
+                    name varchar not null
             ''')
 
-crearTabla('type_of_room_room_services','''
-                    type_of_room_id int not null,
-                    room_services_id int not null,
-                    foreign key (room_services_id) references room_services(id),
-                    foreign key (type_of_room_id) references type_of_room(id)
+crearTabla('beed_aviable_condition_room_services','''
+                    beed_aviable_condition_id int not null,
+                    beed_services_id int not null,
+                    foreign key (beed_services_id) references beed_services(id),
+                    foreign key (beed_aviable_condition_id) references beed_aviable_condition(id)
             ''')
 
 
@@ -216,12 +216,12 @@ crearTabla('avatar_pet','''
 
 # reservas
 # los dias que la casa pone desde el comienzo y condiciones
-crearTabla('type_of_room','''
-                    name varchar(20) not null,
-                    price varchar(20) not null,
-                    pet_type_id int not null,
-                    foreign key (pet_type_id) references pet_type(id)
-        ''')
+# crearTabla('type_of_room','''
+#                     name varchar(20) not null,
+#                     price varchar(20) not null,
+#                     pet_type_id int not null,
+#                     foreign key (pet_type_id) references pet_type(id)
+#         ''')
 
 crearTabla('beed_aviable_condition','''
                     house_info_id int not null,
