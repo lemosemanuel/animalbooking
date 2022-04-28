@@ -14,7 +14,7 @@ PATH_FILES = getcwd() + "/files/"
 
 @images.route("/file/<string:name_file>")
 def get_image(name_file):
-    with open("files/imagen.jpeg", "rb") as image_file:
+    with open("files/caca.jpg", "rb") as image_file:
         encoded_string = base64.b64encode(image_file.read())
     response = make_response(encoded_string)
     print(encoded_string)

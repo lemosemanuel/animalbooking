@@ -26,6 +26,7 @@ class AppRoutes{
       RoutesModel(route: 'hosters', icon: Icons.house, name: 'Hosters Screen', screen: const HosterScreen()),
 
 
+      RoutesModel(route: 'hosterinfo', icon: Icons.house, name: 'Hoster Info Screen', screen: const HosterInfoScreen()),
 
 
 
@@ -35,10 +36,9 @@ class AppRoutes{
       RoutesModel(route: 'petregister', icon: Icons.pets, name: 'Animal Register', screen: const PetRegisterScreen()),
       RoutesModel(route: 'qr', icon: Icons.pets, name: 'qr screen', screen: const QrScreen()),
       RoutesModel(route: 'reservation', icon: Icons.pets, name: 'Reservation Screen', screen: const ReservationScreen()),
-      RoutesModel(route: 'reservation_pet', icon: Icons.app_registration, name: 'Reservation Screen', screen: ReservationPetScreen()),
+      // RoutesModel(route: 'reservation_pet', icon: Icons.app_registration, name: 'Reservation Screen', screen: ReservationPetScreen()),
       RoutesModel(route: 'reservation_pet_details', icon: Icons.app_registration, name: 'Reservation Details Screen', screen: ReservationDetailsScreen()),
       RoutesModel(route: 'profile', icon: Icons.pets, name: 'Profile Screen', screen: const ProfileScreen()),
-      RoutesModel(route: 'hosterinfo', icon: Icons.house, name: 'Hoster Info Screen', screen: const HosterInfoScreen()),
       RoutesModel(route: 'payment', icon: Icons.card_giftcard, name: 'Payment Screen', screen: PaymentScreen()),
 
 
@@ -50,6 +50,7 @@ class AppRoutes{
       RoutesModel(route: 'register_two_pet_pin', icon: Icons.app_registration, name: 'Register Two Pet Screen', screen: RegisterPin()),
       // RoutesModel(route: 'register_two_pet_successful', icon: Icons.app_registration, name: 'Register Two Pet Screen', screen: SuccessfulRegister()),
       RoutesModel(route: 'walkers', icon: Icons.app_registration, name: 'Walkers Screen', screen: WalkersScreen()),
+
 
       
   ];

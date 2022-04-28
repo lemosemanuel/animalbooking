@@ -14,6 +14,8 @@ class HosterService extends ChangeNotifier{
   bool isSaving=true;
   late Hoster selectedHoster;
 
+  dynamic id_hoster;
+
   HosterService(){
     this.loadHosters();
   }
@@ -38,13 +40,11 @@ class HosterService extends ChangeNotifier{
     return this.hosters;
   }
 
-
-
   Future checkAviable(String start_day,String end_day,String pet_id,String city_id)async{
       var headers = {
         'Content-Type': 'application/json'
       };
-      var request = http.Request('GET', Uri.parse('${urlDirecction.url}api/data_house'));
+      var request = http.Request('GET', Uri.parse('${urlDirecction.url}api/resume_data_house'));
       request.body = json.encode({
         "start_day":start_day,
         "end_day":end_day,
@@ -60,7 +60,7 @@ class HosterService extends ChangeNotifier{
       // print("${respuestaJson}");
 
       if (respuestaJson["succefully"]==true){
-        print(respuestaJson);
+        // print(respuestaJson);
         return respuestaJson["houses"];
       }else{
         return "";
