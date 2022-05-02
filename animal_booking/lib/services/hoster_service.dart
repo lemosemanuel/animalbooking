@@ -12,7 +12,17 @@ class HosterService extends ChangeNotifier{
   final List<Hoster>hosters=[];
   bool isLoading=true;
   bool isSaving=true;
-  late Hoster selectedHoster;
+  Hoster? selectedHoster;
+  dynamic beed_id_selected;
+
+  get beed_id_selec{
+    return beed_id_selected;
+  }
+
+  set beed_id_selec(dynamic id){
+    this.beed_id_selected=id;
+    notifyListeners();
+  }
 
   dynamic id_hoster;
 
@@ -66,6 +76,36 @@ class HosterService extends ChangeNotifier{
         return "";
       }
   }
+
+  Future infoParticularHouse(String house_id,String start_day,String end_day,String pet_id,String city_id)async{
+      var headers = {
+        'Content-Type': 'application/json'
+      };
+      var request = http.Request('GET', Uri.parse('${urlDirecction.url}api/data_particular_house'));
+      request.body = json.encode({
+        "house_id":house_id,
+        "start_day":start_day,
+        "end_day":end_day,
+        "pet_id":pet_id,
+        "city_id":city_id
+      });
+      request.headers.addAll(headers);
+
+      http.StreamedResponse response = await request.send();
+      // print (await response.stream.bytesToString());
+      String respuesta = await response.stream.bytesToString();
+      var respuestaJson=json.decode(respuesta);
+      // print("${respuestaJson}");
+
+      if (respuestaJson["succefully"]==true){
+        // print(respuestaJson);
+        return respuestaJson["houses"];
+      }else{
+        return "";
+      }
+  }
+
+
 
 
 }

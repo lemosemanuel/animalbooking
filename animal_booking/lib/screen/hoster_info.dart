@@ -1,67 +1,82 @@
+import 'dart:convert';
+
 import 'package:animal_booking/services/services.dart';
 import 'package:flutter/material.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:provider/provider.dart';
 import 'package:simple_vertical_calendar/simple_vertical_calendar.dart';
 
+
+
+
 class HosterInfoScreen extends StatelessWidget {
    
-  const HosterInfoScreen({Key? key}) : super(key: key);
+  HosterInfoScreen({Key? key}) : super(key: key);
   
   @override
   Widget build(BuildContext context) {
-    final hosterService= Provider.of<HosterService>(context);
-    // print(hosterService.selectedHoster.housePicture[0].picture);
-    return Scaffold(
-      backgroundColor: Colors.white,
-      appBar: AppBar(
-        backgroundColor: Colors.amber,
-        iconTheme: IconThemeData(color: Colors.black),
+    final hosterService = Provider.of<HosterService>(context);
+    return FutureBuilder(
+      future: hosterService.infoParticularHouse(hosterService.id_hoster,"","","",""),
+      builder: (context,snapshot){
+        if (snapshot.hasData){
+          var respuesta=snapshot.data;
+          return Scaffold(
+            backgroundColor: Colors.white,
+            appBar: AppBar(
+              backgroundColor: Colors.amber,
+              iconTheme: IconThemeData(color: Colors.black),
+              
+              actions: [
+                IconButton(onPressed: (){}, icon: Icon(Icons.ios_share_outlined)),
+                IconButton(onPressed: (){}, icon: Icon(Icons.share)),
         
-        actions: [
-          IconButton(onPressed: (){}, icon: Icon(Icons.ios_share_outlined)),
-          IconButton(onPressed: (){}, icon: Icon(Icons.share)),
-
-        ],
-        ),
-      body:  SafeArea(
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          children: <Widget>[
-            _PicturesBox(hosterService: hosterService),
-            
-            Expanded(
-              child: ListView.builder(
-              itemCount: 7,
-              itemBuilder: (_, i) {
-                if (i ==0 )
-                  return _InfoBox(hosterService: hosterService);
-                if (i==1)
-                  return _AnfitrionInfo(hosterService: hosterService);
-                if (i == 2)
-                  return _DescriptionBox(hosterService: hosterService);
-                if (i == 3)
-                  return _includedBox(color: Colors.green);
-                else if (i == 4)
-                  return _ReviewsBox(hosterService: hosterService);
-                else if (i ==5)
-                  return _MapBox(hosterService: hosterService);
-                else
-                  return Calendar();
-              },
+              ],
+              ),
+            body:  SafeArea(
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                children: <Widget>[
+                  _PicturesBox(respuesta: respuesta),
+                  
+                  Expanded(
+                    child: ListView.builder(
+                    itemCount: 7,
+                    itemBuilder: (_, i) {
+                      if (i ==0 )
+                        return _InfoBox(respuesta:respuesta);
+                      if (i==1)
+                        return _AnfitrionInfo(respuesta: respuesta);
+                      if (i == 2)
+                        return _DescriptionBox(respuesta: respuesta);
+                      if (i == 3)
+                        return _includedBox(color: Colors.green,respuesta: respuesta);
+                      else if (i == 4)
+                        return _ReviewsBox(respuesta: respuesta);
+                      else if (i ==5)
+                        return _MapBox(respuesta: respuesta);
+                      else
+                        return Calendar();
+                    },
+                  ),
+                  ),
+        
+                  Align(
+                    alignment: Alignment.bottomCenter,
+                    child: _ReservedButton(respuesta: respuesta))
+                ],
+              ),
             ),
-            ),
+          );
 
-            Align(
-              alignment: Alignment.bottomCenter,
-              child: _ReservedButton(hosterService: hosterService))
-          ],
-        ),
-      ),
+        }else{
+          return CircularProgressIndicator();
+        }
+      },
     );
   }
 
-  Widget _includedBox({Color? color}) => 
+  Widget _includedBox({Color? color,dynamic respuesta}) => 
       Container(
       constraints: BoxConstraints(
         maxHeight: double.infinity,),
@@ -70,15 +85,15 @@ class HosterInfoScreen extends StatelessWidget {
         color: Colors.white
       ),
         // margin: EdgeInsets.all(),
-        // height: 200, 
-        width: 200, 
+        // height: 500, 
+        width: double.infinity, 
         // color: color,
         child: Padding(
           padding: const EdgeInsets.all(8.0),
           child: Column(
             children: [
-              Text('¿Qué ofrece este lugar?',style: TextStyle(color:Colors.black,fontWeight: FontWeight.bold ,fontSize: 20),),
-              _includContainer()
+              Text('¿Qué tipos de Opciones hay?',style: TextStyle(color:Colors.black,fontWeight: FontWeight.bold ,fontSize: 20),),
+              _includContainer(respuesta: respuesta,)
             ],
           ),
         ),
@@ -88,16 +103,22 @@ class HosterInfoScreen extends StatelessWidget {
 
 }
 
-class _ReservedButton extends StatelessWidget {
-  const _ReservedButton({
+class _ReservedButton extends StatefulWidget {
+  dynamic respuesta;
+  _ReservedButton({
     Key? key,
-    required this.hosterService,
+    required this.respuesta,
   }) : super(key: key);
 
-  final HosterService hosterService;
+  @override
+  State<_ReservedButton> createState() => _ReservedButtonState();
+}
+
+class _ReservedButtonState extends State<_ReservedButton> {
 
   @override
   Widget build(BuildContext context) {
+  final hosterService = Provider.of<HosterService>(context);
     return Container(     
       decoration:const  BoxDecoration(
         border: Border.symmetric(horizontal: BorderSide(width: 0.5,color:Colors.black)),
@@ -111,7 +132,7 @@ class _ReservedButton extends StatelessWidget {
         child: Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
-            Text("\$${hosterService.selectedHoster.price}",style: TextStyle(fontSize: 30,color: Colors.black),),
+            (hosterService.beed_id_selec!=null)?Text("\$${widget.respuesta['beed'][hosterService.beed_id_selec]["beed_price"]}",style: TextStyle(fontSize: 30,color: Colors.black),):Text("Selecciona una Opcion",style: TextStyle(fontSize: 20,color: Colors.black)),
             MaterialButton(
               onPressed: (){
                 Navigator.pushNamed(context, "payment");
@@ -134,12 +155,14 @@ class _ReservedButton extends StatelessWidget {
 }
 
 class _PicturesBox extends StatelessWidget {
-  const _PicturesBox({
+  dynamic respuesta;
+  _PicturesBox({
     Key? key,
-    required this.hosterService,
+    required this.respuesta,
   }) : super(key: key);
 
-  final HosterService hosterService;
+
+  // final HosterService hosterService;
 
   @override
   Widget build(BuildContext context) {
@@ -148,15 +171,16 @@ class _PicturesBox extends StatelessWidget {
       child: ListView.builder(
         shrinkWrap: true,
         scrollDirection: Axis.horizontal,
-        itemCount: hosterService.selectedHoster.housePicture.length,
+        itemCount: respuesta['images'].length,
         itemBuilder: (BuildContext context, int index) => Card(
               child: Center(child: Container(
                 width: width-10,
                 height: double.infinity,
                 color: Colors.white,
-                child: Image(
-                  image: NetworkImage("${hosterService.selectedHoster.housePicture[index].picture}"),
-                  fit: BoxFit.cover,
+                
+                child: Image.memory(
+                        base64.decode(respuesta['images'][index]),
+                        fit: BoxFit.cover,
                   )
                 
               )),
@@ -181,10 +205,12 @@ class Calendar extends StatelessWidget {
         color: Colors.grey.shade300
       ),
         // color: Colors.red,
-        height: 300,
+        height: 400,
         width: double.infinity,
         margin: EdgeInsets.symmetric(vertical: 15),
         child: SimpleVerticalCalendar(
+          startDate: DateTime.utc(2022,05,04),
+          endDate: DateTime.utc(2022,05,10),
           numOfMonth: 1,
           headerStyle: const HeaderStyle(
             titleTextStyle: TextStyle(
@@ -211,9 +237,10 @@ class Calendar extends StatelessWidget {
 }
 
 class _ReviewsBox extends StatelessWidget {
-  final HosterService hosterService;
-  const _ReviewsBox({
-    Key? key, required this.hosterService,
+  // final HosterService hosterService;
+  dynamic respuesta;
+  _ReviewsBox({
+    Key? key, required this.respuesta,
   }) : super(key: key);
 
   @override
@@ -228,7 +255,7 @@ class _ReviewsBox extends StatelessWidget {
       height: 180,
       child: Expanded(
         child: ListView.builder(
-          itemCount: hosterService.selectedHoster.reviews.length,
+          itemCount: respuesta['reviews_comment'].length,
           scrollDirection: Axis.horizontal,
           itemBuilder: (_, index){
             return Card(
@@ -263,7 +290,7 @@ class _ReviewsBox extends StatelessWidget {
                             // color: Colors.red,
                             height: 120,
                             width: 123,
-                            child: Text('"${hosterService.selectedHoster.reviews[index].comment}"',
+                            child: Text('"${respuesta['reviews_comment'][index]}"',
                             style: const TextStyle(
                               fontSize: 20,
                               color: Colors.black,
@@ -288,9 +315,10 @@ class _ReviewsBox extends StatelessWidget {
 }
 
 class _DescriptionBox extends StatelessWidget {
-  final HosterService hosterService;
-  const _DescriptionBox({
-    Key? key, required this.hosterService,
+  // final HosterService hosterService;
+  dynamic respuesta;
+  _DescriptionBox({
+    Key? key, required this.respuesta,
   }) : super(key: key);
 
   @override
@@ -309,7 +337,7 @@ class _DescriptionBox extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Text(
-              '" ${hosterService.selectedHoster.placeDescription} "',
+              '" ${respuesta['description']} "',
               style: TextStyle(
                 fontSize: 20,
                 color: Colors.black,
@@ -330,9 +358,10 @@ class _DescriptionBox extends StatelessWidget {
 }
 
 class _AnfitrionInfo extends StatelessWidget {
-  final HosterService hosterService;
-  const _AnfitrionInfo({
-    Key? key, required this.hosterService,
+  dynamic respuesta;
+
+  _AnfitrionInfo({
+    Key? key, required this.respuesta,
   }) : super(key: key);
 
   @override
@@ -360,14 +389,14 @@ class _AnfitrionInfo extends StatelessWidget {
                 Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Text("Establecimiento tipo : ${hosterService.selectedHoster.typeOfHouse}",style: TextStyle(color: Colors.black),),
+                    Text("Establecimiento tipo : ${respuesta['type_of_house']}",style: TextStyle(color: Colors.black),),
                     SizedBox(height: 8,),
-                    Text("Anfitrion: ${hosterService.selectedHoster.name}  ${hosterService.selectedHoster.lastname}",style: TextStyle(color: Colors.black),)
+                    Text("Anfitrion: ${respuesta['anfitrion_name']}  ${"lemos"}",style: TextStyle(color: Colors.black),)
                   ],
                 ),
                 CircleAvatar(
                   radius: 35,
-                  backgroundImage: NetworkImage("${hosterService.selectedHoster.profilePicture}"),
+                  // backgroundImage: NetworkImage("${hosterService.selectedHoster?.profilePicture}"),
                   )
               ],
             ),
@@ -384,9 +413,10 @@ class _AnfitrionInfo extends StatelessWidget {
 }
 
 class _MapBox extends StatelessWidget { 
-  final HosterService hosterService;
-  const _MapBox({
-    Key? key, required this.hosterService,
+  // final HosterService hosterService;
+  dynamic respuesta;
+  _MapBox({
+    Key? key, required this.respuesta,
   }) : super(key: key);
 
   @override
@@ -406,7 +436,7 @@ class _MapBox extends StatelessWidget {
                       borderRadius: BorderRadius.all(Radius.circular(20)),
                       color: Colors.white
                     ),
-                    height: 275,
+                    height: 300,
                     width: double.infinity,
                     // decoration: BoxDecoration(
                     //   borderRadius: BorderRadius.circular(30),
@@ -419,8 +449,8 @@ class _MapBox extends StatelessWidget {
                       // markers: Marker(position:  LatLng(39.9042, 116.4074), markerId: null,),
                       initialCameraPosition: CameraPosition(
                         target: 
-                        LatLng( double.parse("${hosterService.selectedHoster.lat}"),
-                         double.parse("${hosterService.selectedHoster.log}")
+                        LatLng( double.parse("${-34.6318259}"),
+                         double.parse("${-58.4055651}")
                         ) ,
                         zoom: 17),
             )
@@ -433,9 +463,9 @@ class _MapBox extends StatelessWidget {
 }
 
 class _InfoBox extends StatelessWidget {
-  final HosterService hosterService;
-  const _InfoBox({
-    Key? key,required this.hosterService,
+  dynamic respuesta;
+  _InfoBox({
+    Key? key,required this.respuesta,
   }) : super(key: key);
 
   @override
@@ -452,7 +482,7 @@ class _InfoBox extends StatelessWidget {
           children: [
 
             Text(
-              '${hosterService.selectedHoster.houseName}',
+              '${respuesta['name_house']}',
               style: const TextStyle(fontSize: 27,color: Colors.black),
             ),
 
@@ -464,7 +494,7 @@ class _InfoBox extends StatelessWidget {
                     Icon(Icons.star_outlined,color: Colors.amber,),
                     SizedBox(width: 3,),
                      // puntuation
-                    Text("${hosterService.selectedHoster.qualification}",style: TextStyle(color: Colors.black),),
+                    Text("${respuesta['calificationAverage']}",style: TextStyle(color: Colors.black),),
                   ],
                 ),
 
@@ -473,7 +503,7 @@ class _InfoBox extends StatelessWidget {
                       onPressed: (){},
                       // style: TextStyle(fontSize: 24),
                       child: Text(
-                        '${hosterService.selectedHoster.reviews.length} evaluaciones',
+                        '${respuesta['reviews_comment'].length} evaluaciones',
                         style: const TextStyle(
                           color: Colors.black,
                           decoration: TextDecoration.underline,
@@ -485,7 +515,7 @@ class _InfoBox extends StatelessWidget {
                 Row(
                   children:[
                     Icon(Icons.takeout_dining_outlined,color: Colors.amber,),
-                    (hosterService.selectedHoster.isBest == true)
+                    (true == true)
                     ? Text('Superanfitrion',style: TextStyle(color: Colors.black),)
                     : Text('Anfitrion Normal',style: TextStyle(color: Colors.black))
                     
@@ -499,7 +529,7 @@ class _InfoBox extends StatelessWidget {
           TextButton(
                 onPressed: (){},
                 child: Text(
-                  "${hosterService.selectedHoster.street}",
+                  "${respuesta['adress']}",
                   style:const TextStyle(
                     color: Colors.black,
                     decoration: TextDecoration.underline,
@@ -516,69 +546,65 @@ class _InfoBox extends StatelessWidget {
 }
 
 class _includContainer extends StatelessWidget {
-  const _includContainer({
+  dynamic respuesta;
+  _includContainer({
     Key? key,
+    required this.respuesta
   }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    return Row(
-      children: [
-        _listOfIncludes(),
-        
-        _listOfIncludes()
-      ],
-    );
-  }
+    final hosterService = Provider.of<HosterService>(context);
 
-  Expanded _listOfIncludes() {
-    return Expanded(
-        child: Container(
-          // color: Colors.black,
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
+    print(respuesta);
+    return Container(
+      decoration: const BoxDecoration(
+        // color: Colors.red
+      ),
+      width:double.infinity,
+      height: 150,
+      child: Expanded(
+        child: ListView.builder(
+          itemCount: respuesta['beed'].length,
+          scrollDirection: Axis.horizontal,
+          itemBuilder: (_,index){
+            return GestureDetector(
+              onTap: (){
+                hosterService.beed_id_selec=index;
+                
+                // print(respuesta['beed'][index]["beed_price"]);
+              },
+              child: Card(
+                color: (hosterService.beed_id_selec==index)?Colors.green:Colors.grey.shade200,
+                child: Container(
+                  // height: 200,
+                  width: 290,
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceAround,
+                    children: [
+                      Text("${respuesta['beed'][index]['beed_name']}",style: TextStyle(fontWeight: FontWeight.bold,fontSize: 20),),
+                      Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        mainAxisAlignment: MainAxisAlignment.spaceAround,
+                        children: [
             
-            children: [
-              Padding(
-                padding: const EdgeInsets.all(8.0),
-                child: Row(
-                  children: [
-                    Icon(Icons.shower,color: Colors.black),
-                    Text("incluye Ducha",style: TextStyle(color: Colors.black),)
-                  ],
+                          Text("Incluye: \n${(respuesta['beed'][index]['services']).join(',')}"),
+                          Text("Habitacion para: \n ${(respuesta['beed'][index]['pet_type_id'])}"),
+            
+                          Text("\$${respuesta['beed'][index]['beed_price']}",style: TextStyle(fontSize: 20,fontWeight: FontWeight.bold),),
+                        ],
+                      )
+            
+                      
+                    ],
+                  ),
                 ),
               ),
-              Padding(
-                padding: const EdgeInsets.all(8.0),
-                child: Row(
-                  children: [
-                    Icon(Icons.no_food_sharp,color: Colors.black,),
-                    Text("incluye Comida",style: TextStyle(color: Colors.black),)
-                  ],
-                ),
-              ),
-              Padding(
-                padding: const EdgeInsets.all(8.0),
-                child: Row(
-                  children: [
-                    Icon(Icons.car_rental,color: Colors.black,),
-                    Text("incluye Translado",style: TextStyle(color: Colors.black),)
-                  ],
-                ),
-              ),
-              Padding(
-                padding: const EdgeInsets.all(8.0),
-                child: Row(
-                  children: [
-                    Icon(Icons.directions_walk_outlined,color: Colors.black,),
-                    Text("incluye paseo",style: TextStyle(color: Colors.black),)
-                  ],
-                ),
-              ),
-
-            ],
-          )),
-      );
+            );
+          }
+          ),
+      ),
+    );
+  
   }
 }
-

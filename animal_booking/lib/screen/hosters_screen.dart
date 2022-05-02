@@ -208,8 +208,8 @@ class _cardBox extends StatelessWidget {
   Widget build(BuildContext context) {
     final hosterService=Provider.of<HosterService>(context);
     String nombre= respuesta[respuesta.keys.toList()[i]]['name'];
-    String imagen=respuesta[respuesta.keys.toList()[i]]['image'];
-    double? price=respuesta[respuesta.keys.toList()[i]]['price'];
+    String imagen=respuesta[respuesta.keys.toList()[i]]['image'][0];
+    String? price=respuesta[respuesta.keys.toList()[i]]['price'];
     var image2 = base64.decode(imagen);
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 20),
@@ -311,14 +311,14 @@ class _cardBox extends StatelessWidget {
                           child: Row(
                             mainAxisAlignment: MainAxisAlignment.spaceBetween,
                             children: [
-                              Text("\$${price}",style: TextStyle(fontSize: 30),),
+                              Text("\$${price}",style: TextStyle(fontSize: 15,fontWeight: FontWeight.bold),),
                               Padding(
                                 padding: const EdgeInsets.symmetric(horizontal: 6),
                                 child: MaterialButton(
-                                  onPressed: (){
-                                    hosterService.id_hoster=respuesta[respuesta.keys.toList()[i]]['house_id'];
-                                    // Navigator.pushNamed(context, 'hosterinfo');
-                                    print(hosterService.id_hoster);
+                                  onPressed: ()async{
+                                    hosterService.id_hoster= respuesta[respuesta.keys.toList()[i]]['house_id'];
+                                    Navigator.pushNamed(context, 'hosterinfo');
+                                    // print(hosterService.id_hoster);
                                   },
                                   shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
                                   disabledColor: Colors.indigo,

@@ -85,6 +85,10 @@ crearTabla('avatar_type_of_user','''
 
             ''')
 
+crearTabla('type_of_house',"""
+                        name varchar not null,
+                        total_meters varchar not null
+                """)
 
 # vamos con los datos de la casa
 crearTabla('house_info','''
@@ -93,6 +97,7 @@ crearTabla('house_info','''
                     price varchar(20) not null,
                     country int not null,
                     city int not null,
+                    type_of_house_id int not null,
                     district int not null,
                     cp int not null,
                     street varcha not null,
@@ -107,7 +112,10 @@ crearTabla('house_info','''
                     foreign key (city_id) references city(id),
                     foreign key (district_id) references district(id),
                     foreign key (cp_id) references cp(id)
+                    foreign key (type_of_house_id) references type_of_house(id)
+
             ''')
+
 
 crearTabla('reviews','''
                     description varchar not null,

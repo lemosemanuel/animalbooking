@@ -22,4 +22,4 @@ app.register_blueprint(resume_data_house, url_prefix="/api")
 
 if __name__ == '__main__':
     # load_dotenv()
-    app.run(debug=True,port=8000,host="192.168.1.243")
+    app.run(debug=True,port=8000,host="192.168.1.180")

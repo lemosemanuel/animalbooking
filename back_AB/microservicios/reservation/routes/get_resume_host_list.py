@@ -48,11 +48,17 @@ def resumeDataFreeHouse(house_id_and_beed_id):
     for i in house_id_and_beed_id.keys():
         name_house=buscar_id('house_info','name','id',i)
         images_id=buscar_id('home_info_images','images_id','house_info_id',i)
+        # images_id=buscar_id('home_info_images','images_id','house_info_id',"12")
+        image=[]
         # si tiene imagen
         if images_id:
-            image=buscar_id('images','name','id',str(images_id))
+            if type(images_id)!=tuple:
+                images_id=images_id,
+            image.append(str(buscar_id('images','name','id',str(images_id[0]))))
         else:
             image=[]
+
+            
         reviews_id=buscar_id('house_info_reviews','reviews_id','house_info_id',i)
         calification=[]
         calificationAverage=[]
@@ -91,7 +97,7 @@ def resumeDataFreeHouse(house_id_and_beed_id):
                 "calification":calificationAverage,
                 "image":image,
                 "services":services_name_house,
-                "price": price_average
+                "price": ("%.2f" % price_average)
             })
         else:
             houses.update({i:
@@ -101,7 +107,7 @@ def resumeDataFreeHouse(house_id_and_beed_id):
                 "calification":calificationAverage,
                 "image":image,
                 "services":services_name_house,
-                "price": price_average
+                "price": ("%.2f" % price_average)
                 }
             })        
     return houses

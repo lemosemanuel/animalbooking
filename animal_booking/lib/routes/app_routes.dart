@@ -26,7 +26,7 @@ class AppRoutes{
       RoutesModel(route: 'hosters', icon: Icons.house, name: 'Hosters Screen', screen: const HosterScreen()),
 
 
-      RoutesModel(route: 'hosterinfo', icon: Icons.house, name: 'Hoster Info Screen', screen: const HosterInfoScreen()),
+      RoutesModel(route: 'hosterinfo', icon: Icons.house, name: 'Hoster Info Screen', screen: HosterInfoScreen()),
 
 
 
