@@ -1,5 +1,7 @@
 import 'dart:convert';
 
+import 'package:animal_booking/providers/decodeJWT.dart';
+import 'package:animal_booking/screen/hosters_screen.dart';
 import 'package:animal_booking/services/services.dart';
 import 'package:flutter/material.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
@@ -134,8 +136,16 @@ class _ReservedButtonState extends State<_ReservedButton> {
           children: [
             (hosterService.beed_id_selec!=null)?Text("\$${widget.respuesta['beed'][hosterService.beed_id_selec]["beed_price"]}",style: TextStyle(fontSize: 30,color: Colors.black),):Text("Selecciona una Opcion",style: TextStyle(fontSize: 20,color: Colors.black)),
             MaterialButton(
-              onPressed: (){
-                Navigator.pushNamed(context, "payment");
+              onPressed: ()async{
+                // hosterService.bed_aviable_condition_id=respuesta['beed'][index]
+                print(hosterService.bed_aviable_condition_id);
+                print(hosterService.startDate);
+                var tokenDeco=await decodeJwt();
+                print(await tokenDeco['id']);
+                // print(pet_id);
+
+
+                // Navigator.pushNamed(context, "payment");
               },
               shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
               disabledColor: Colors.indigo,
@@ -197,6 +207,7 @@ class Calendar extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final hosterService=Provider.of<HosterService>(context);
     return Padding(
       padding: const EdgeInsets.all(20.0),
       child: Container(
@@ -209,8 +220,8 @@ class Calendar extends StatelessWidget {
         width: double.infinity,
         margin: EdgeInsets.symmetric(vertical: 15),
         child: SimpleVerticalCalendar(
-          startDate: DateTime.utc(2022,05,04),
-          endDate: DateTime.utc(2022,05,10),
+          startDate: (hosterService.startDate!="")?DateTime.parse(hosterService.startDate):null,
+          endDate:  (hosterService.endDate!="")?DateTime.parse(hosterService.endDate):null,
           numOfMonth: 1,
           headerStyle: const HeaderStyle(
             titleTextStyle: TextStyle(
@@ -227,6 +238,10 @@ class Calendar extends StatelessWidget {
             textColor: Colors.black,
           ),
           onDateTap: (start, end) {
+            hosterService.startDate=start.toString();
+            hosterService.endDate=end.toString();
+
+
             print(start);
             print(end);
           },
@@ -556,6 +571,7 @@ class _includContainer extends StatelessWidget {
   Widget build(BuildContext context) {
     final hosterService = Provider.of<HosterService>(context);
 
+
     print(respuesta);
     return Container(
       decoration: const BoxDecoration(
@@ -571,6 +587,8 @@ class _includContainer extends StatelessWidget {
             return GestureDetector(
               onTap: (){
                 hosterService.beed_id_selec=index;
+                hosterService.bed_aviable_condition_id=respuesta['beed'][index]['beed_id'].toString();
+
                 
                 // print(respuesta['beed'][index]["beed_price"]);
               },

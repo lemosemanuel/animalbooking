@@ -6,7 +6,37 @@ from dataBase.pedir_relaciones import buscar_id
 from function_jwt import validate_token
 
 
+
+{
+    "bed_aviable_condition_id":"",
+    "avatar_info_id":"",
+    "pet_id":"",
+    "start_day":"",
+    "end_day":"",
+    "status":""
+}
+
+
 reservation=Blueprint("reservation",__name__)
+
+
+def createReservation(bed_aviable_condition_id,avatar_info_id,pet_id,start_day,end_day,status):
+
+    insertData(
+        "reservations",
+        """
+            bed_aviable_condition_id,avatar_info_id,pet_id,start_day,end_day,status
+        """,
+        "("+bed_aviable_condition_id+","+avatar_info_id+","+pet_id+","+start_day+","+end_day+","+status+",)"
+        )
+
+
+
+
+
+
+
+
 
 def createReservation(type_of_room_id,avatar_info_id,pet_id,start_day,end_day,status):
     print(buscar_id('room_aviable','start_day','type_of_room_id',type_of_room_id))

@@ -16,6 +16,7 @@ String _pet_type="";
 var respuesta;
 
 
+
 class HosterScreen extends StatefulWidget {
    
   const HosterScreen({Key? key}) : super(key: key);
@@ -29,6 +30,9 @@ class _HosterScreenState extends State<HosterScreen> {
   @override
   Widget build(BuildContext context) {
     final hosterService=Provider.of<HosterService>(context);
+    dynamic lista=hosterService.pet_by_avatar_id('2');
+
+    print(lista);
     return Scaffold(
         backgroundColor: Colors.white,
         appBar: AppBar(
@@ -114,18 +118,13 @@ class _HosterScreenState extends State<HosterScreen> {
                               borderRadius: BorderRadius.circular(10), // <--- this line
                             ),
                           ),
-                                    
-                          items:const [
-                            DropdownMenuItem(
-                              value: 'PERRO',
-                              child: Text('Perro'),),
-                            DropdownMenuItem(
-                              value: 'GATO',
-                              child: Text('Gato'),),
-                            DropdownMenuItem(
-                              value: 'TORTUGA',
-                              child: Text('Tortuga'),)
-                          ], 
+                          
+                          items: lista[2].map(
+                            (e) => DropdownMenuItem(
+                              child: Text(e['name']),
+                              value: e['pet_type'],
+                              )
+                          ).toList(),
                           onChanged: (value)=> _pet_type=value!
                           ),
                     ),
@@ -183,7 +182,8 @@ class _HosterBody extends StatelessWidget {
                   itemCount: respuesta.keys.length,
                   itemBuilder: (context,index)=>GestureDetector(
                     onTap: (){
-                      hosterService.selectedHoster=hosterService.hosters[index];
+                      hosterService.id_hoster=respuesta[respuesta.keys.toList()[index]]['house_id'];
+                      // hosterService.selectedHoster=hosterService.hosters[index];
                       Navigator.pushNamed(context, 'hosterinfo');
                     },
                     child: _cardBox(i:index)
@@ -317,7 +317,11 @@ class _cardBox extends StatelessWidget {
                                 child: MaterialButton(
                                   onPressed: ()async{
                                     hosterService.id_hoster= respuesta[respuesta.keys.toList()[i]]['house_id'];
+                                    hosterService.startDate=_start_date.text;
+                                    hosterService.endDate=_end_date.text;
+
                                     Navigator.pushNamed(context, 'hosterinfo');
+
                                     // print(hosterService.id_hoster);
                                   },
                                   shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
@@ -344,7 +348,7 @@ class _cardBox extends StatelessWidget {
           ),
 
 
-          (hosterService.hosters[i].isBest==true)?
+          ("isBest"=="isBest")?
           Container(
             child: Positioned(
               top: 10,

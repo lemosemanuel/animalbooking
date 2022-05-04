@@ -24,10 +24,10 @@ def buscar_id(tabla,columnaAdevolver,column,valor):
         con, cursor = connectDB()
         if type(valor) is tuple:
             # print('es tupla')
-            sql =""" SELECT """+tabla+'.'+columnaAdevolver+""" FROM """+tabla+""" WHERE """+column+""" in """+str(valor)+""" """    
+            sql =""" SELECT """+columnaAdevolver+""" FROM """+tabla+""" WHERE """+column+""" in """+str(valor)+""" """    
         else:
             # print('no es tupla')
-            sql =""" SELECT """+tabla+'.'+columnaAdevolver+""" FROM """+tabla+""" WHERE """+column+""" in ("""+valor+""") """    
+            sql =""" SELECT """+columnaAdevolver+""" FROM """+tabla+""" WHERE """+column+""" in ("""+valor+""") """    
         cursor.execute(sql)
         lista=()
         for x in cursor:

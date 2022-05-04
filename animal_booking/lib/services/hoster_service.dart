@@ -8,12 +8,23 @@ import 'url.dart' as urlDirecction;
 
 class HosterService extends ChangeNotifier{
 
-  final String _baseUrl='fluttervarios-a808e-default-rtdb.firebaseio.com';
-  final List<Hoster>hosters=[];
-  bool isLoading=true;
-  bool isSaving=true;
-  Hoster? selectedHoster;
+  String bed_aviable_condition_id="";
+  String avatar_info_id="";
+  String pet_id="";
+
+  String startDate="";
+  String endDate="";
+
+  String status="";
   dynamic beed_id_selected;
+  dynamic id_hoster;
+
+
+  // final String _baseUrl='fluttervarios-a808e-default-rtdb.firebaseio.com';
+  // final List<Hoster>hosters=[];
+  // bool isLoading=true;
+  // bool isSaving=true;
+  // Hoster? selectedHoster;
 
   get beed_id_selec{
     return beed_id_selected;
@@ -24,31 +35,55 @@ class HosterService extends ChangeNotifier{
     notifyListeners();
   }
 
-  dynamic id_hoster;
 
-  HosterService(){
-    this.loadHosters();
+  // HosterService(){
+  //   this.loadHosters();
+  // }
+
+  // Future <List<Hoster>> loadHosters()async{
+  //   this.isLoading=true;
+  //   notifyListeners();
+  //   final url= Uri.https(_baseUrl, 'hosters.json');
+  //   final resp=await http.get(url);
+  //   final Map<String,dynamic> hosterMap=json.decode(resp.body);
+  //   // print(hosterMap);
+
+  //   hosterMap.forEach((key, value) {
+  //     final tempHost=Hoster.fromMap(value);
+  //     tempHost.id=key;
+  //     this.hosters.add(tempHost);
+  //   });
+
+  //   this.isLoading=false;
+  //   notifyListeners();
+  //   print(hosters);
+  //   return this.hosters;
+  // }
+  Future pet_by_avatar_id(String avatar_info_id)async{
+      var headers = {
+        'Content-Type': 'application/json'
+      };
+      var request = http.Request('GET', Uri.parse('${urlDirecction.url}api/find_pet_by_avatar_id'));
+      request.body = json.encode({
+        "avatar_info_id":avatar_info_id,
+      });
+      request.headers.addAll(headers);
+
+      http.StreamedResponse response = await request.send();
+      // print (await response.stream.bytesToString());
+      String respuesta = await response.stream.bytesToString();
+      var respuestaJson=json.decode(respuesta);
+      // print("${respuestaJson}");
+
+      if (respuestaJson["succefully"]==true){
+        // print(respuestaJson);
+        return respuestaJson["pets"];
+      }else{
+        return "";
+      }
   }
 
-  Future <List<Hoster>> loadHosters()async{
-    this.isLoading=true;
-    notifyListeners();
-    final url= Uri.https(_baseUrl, 'hosters.json');
-    final resp=await http.get(url);
-    final Map<String,dynamic> hosterMap=json.decode(resp.body);
-    // print(hosterMap);
 
-    hosterMap.forEach((key, value) {
-      final tempHost=Hoster.fromMap(value);
-      tempHost.id=key;
-      this.hosters.add(tempHost);
-    });
-
-    this.isLoading=false;
-    notifyListeners();
-    print(hosters);
-    return this.hosters;
-  }
 
   Future checkAviable(String start_day,String end_day,String pet_id,String city_id)async{
       var headers = {
